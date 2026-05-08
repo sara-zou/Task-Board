@@ -1,6 +1,7 @@
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
-import { Task, UpdateTaskPayload, Status } from '../../types'
+import type { Task, UpdateTaskPayload } from '../../types'
+type Status = 'todo' | 'in_progress' | 'in_review' | 'done'
 
 interface TaskCardProps {
   task: Task
@@ -85,7 +86,7 @@ export default function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
             ? 'due-date--soon'
             : ''
         }`}>
-          {isOverdue(task.due_date) ? '⚠ Overdue' : '📅'}{' '}
+          {isOverdue(task.due_date) ? '! Overdue' : ''}{' '}
           {new Date(task.due_date).toLocaleDateString()}
         </span>
       )}
