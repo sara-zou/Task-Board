@@ -1,4 +1,6 @@
-import type { Task, UpdateTaskPayload, Status } from '../../types'
+import { useDraggable } from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
+import { Task, UpdateTaskPayload, Status } from '../../types'
 
 interface TaskCardProps {
   task: Task
@@ -36,8 +38,26 @@ function isDueSoon(dueDate?: string) {
 }
 
 export default function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({ id: task.id })
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    opacity: isDragging ? 0.4 : 1
+  }
+
   return (
-    <div className={`task-card ${getPriorityClass(task.priority)}`}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`task-card ${getPriorityClass(task.priority)}`}
+      {...attributes}
+    >
+      {/* Drag handle — only this area triggers dragging */}
+      <div className="task-drag-handle" {...listeners}>
+        ⠿
+      </div>
+
       <div className="task-card-header">
         <span className={`priority-badge priority-badge--${task.priority}`}>
           {task.priority}
@@ -58,12 +78,13 @@ export default function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
       )}
 
       {task.due_date && (
-        <span className={`due-date ${isOverdue(task.due_date)
+        <span className={`due-date ${
+          isOverdue(task.due_date)
             ? 'due-date--overdue'
             : isDueSoon(task.due_date)
             ? 'due-date--soon'
             : ''
-          }`}>
+        }`}>
           {isOverdue(task.due_date) ? '⚠ Overdue' : '📅'}{' '}
           {new Date(task.due_date).toLocaleDateString()}
         </span>

@@ -1,3 +1,4 @@
+import { useDroppable } from '@dnd-kit/core'
 import TaskCard from './TaskCard'
 import type { Task, Status, UpdateTaskPayload } from '../../types'
 
@@ -18,6 +19,8 @@ export default function Column({
   onUpdateTask,
   onDeleteTask
 }: ColumnProps) {
+  const { setNodeRef, isOver } = useDroppable({ id })
+
   return (
     <div className={`column column--${id}`}>
       <div className="column-header">
@@ -25,7 +28,10 @@ export default function Column({
         <span className="column-count">{tasks.length}</span>
       </div>
 
-      <div className="column-cards">
+      <div
+        ref={setNodeRef}
+        className={`column-cards ${isOver ? 'column-cards--drag-over' : ''}`}
+      >
         {tasks.length === 0 ? (
           <div className="column-empty">
             <p>No tasks yet</p>
