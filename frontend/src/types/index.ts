@@ -12,22 +12,14 @@ export interface Task {
   created_at: string
 }
 
-export interface Comment {
-  id: string
-  task_id: string
-  user_id: string
-  body: string
-  created_at: string
-}
-
-export interface CreateTaskBody {
+export interface CreateTaskPayload {
   title: string
   description?: string
   priority?: Priority
   due_date?: string
 }
 
-export interface UpdateTaskBody {
+export interface UpdateTaskPayload {
   title?: string
   description?: string
   status?: Status
