@@ -2,7 +2,7 @@
 
 A full-stack Kanban-style task board for task managing.
 
-**[Live Demo]([https://your-app.vercel.app](https://task-board-gray-five.vercel.app/))**
+Live Demo at: https://task-board-gray-five.vercel.app/
 
 ---
 
