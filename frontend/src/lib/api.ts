@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
-import type { CreateTaskPayload, UpdateTaskPayload, Task } from '../types'
+import type { CreateTaskPayload, UpdateTaskPayload, Task, Comment } from '../types'
+
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -50,5 +51,32 @@ export const api = {
       headers
     })
     if (!res.ok) throw new Error('Failed to delete task')
+  },
+
+  async getComments(taskId: string): Promise<Comment[]> {
+    const headers = await getHeaders()
+    const res = await fetch(`${API_URL}/tasks/${taskId}/comments`, { headers })
+    if (!res.ok) throw new Error('Failed to fetch comments')
+    return res.json()
+  },
+  
+  async createComment(taskId: string, body: string): Promise<Comment> {
+    const headers = await getHeaders()
+    const res = await fetch(`${API_URL}/tasks/${taskId}/comments`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ body })
+    })
+    if (!res.ok) throw new Error('Failed to create comment')
+    return res.json()
+  },
+  
+  async deleteComment(id: string): Promise<void> {
+    const headers = await getHeaders()
+    const res = await fetch(`${API_URL}/comments/${id}`, {
+      method: 'DELETE',
+      headers
+    })
+    if (!res.ok) throw new Error('Failed to delete comment')
   }
 }

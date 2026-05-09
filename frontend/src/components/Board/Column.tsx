@@ -3,14 +3,15 @@ import TaskCard from './TaskCard'
 import type { Task, Status, UpdateTaskPayload } from '../../types'
 
 interface ColumnProps {
-  id: Status
-  label: string
-  tasks: Task[]
-  onAddTask: () => void
-  onUpdateTask: (id: string, payload: UpdateTaskPayload) => Promise<void>
-  onDeleteTask: (id: string) => Promise<void>
-  onEditTask: (task: Task) => void
-}
+    id: Status
+    label: string
+    tasks: Task[]
+    onAddTask: () => void
+    onUpdateTask: (id: string, payload: UpdateTaskPayload) => Promise<void>
+    onDeleteTask: (id: string) => Promise<void>
+    onEditTask: (task: Task) => void
+    onOpenTask: (task: Task) => void
+  }
 
 export default function Column({
   id,
@@ -19,7 +20,8 @@ export default function Column({
   onAddTask,
   onUpdateTask,
   onDeleteTask,
-  onEditTask
+  onEditTask,
+  onOpenTask
 }: ColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id })
 
@@ -41,11 +43,12 @@ export default function Column({
         ) : (
           tasks.map(task => (
             <TaskCard
-              key={task.id}
-              task={task}
-              onUpdate={onUpdateTask}
-              onDelete={onDeleteTask}
-              onEdit={onEditTask}
+                key={task.id}
+                task={task}
+                onUpdate={onUpdateTask}
+                onDelete={onDeleteTask}
+                onEdit={onEditTask}
+                onOpen={onOpenTask}
             />
           ))
         )}

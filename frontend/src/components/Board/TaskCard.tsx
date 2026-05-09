@@ -6,11 +6,12 @@ import { LuPencil } from 'react-icons/lu'
 type Status = 'todo' | 'in_progress' | 'in_review' | 'done'
 
 interface TaskCardProps {
-    task: Task
-    onUpdate: (id: string, payload: UpdateTaskPayload) => Promise<void>
-    onDelete: (id: string) => Promise<void>
-    onEdit: (task: Task) => void
-  }
+  task: Task
+  onUpdate: (id: string, payload: UpdateTaskPayload) => Promise<void>
+  onDelete: (id: string) => Promise<void>
+  onEdit: (task: Task) => void
+  onOpen: (task: Task) => void
+}
 
 const STATUS_OPTIONS: { value: Status; label: string }[] = [
   { value: 'todo', label: 'To Do' },
@@ -41,7 +42,7 @@ function isDueSoon(dueDate?: string) {
   return due >= now && due <= twoDaysFromNow
 }
 
-export default function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
+export default function TaskCard({ task, onUpdate, onDelete, onEdit, onOpen }: TaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: task.id })
 
@@ -78,10 +79,14 @@ export default function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardP
     >
       ×
     </button>
+
+    
   </div>
 </div>
 
-      <p className="task-title">{task.title}</p>
+      <p className="task-title task-title--clickable" onClick={() => onOpen(task)}>
+  {task.title}
+</p>
 
       {task.description && (
         <p className="task-description">{task.description}</p>

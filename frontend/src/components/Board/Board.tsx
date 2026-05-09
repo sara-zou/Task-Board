@@ -13,6 +13,7 @@ import Column from './Column'
 import TaskModal from '../TaskModal/TaskModal'
 import TaskCard from './TaskCard'
 import type { Task, Status, CreateTaskPayload, UpdateTaskPayload } from '../../types'
+import TaskDetailPanel from '../TaskDetail/TaskDetailPanel'
 
 const COLUMNS: { id: Status; label: string }[] = [
   { id: 'todo', label: 'To Do' },
@@ -42,6 +43,7 @@ export default function Board({
   const [defaultStatus, setDefaultStatus] = useState<Status>('todo')
   const [activeTask, setActiveTask] = useState<Task | null>(null)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
+  const [openTask, setOpenTask] = useState<Task | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -91,6 +93,7 @@ export default function Board({
   }
 
   return (
+    
     <DndContext
       sensors={sensors}
       onDragStart={handleDragStart}
@@ -129,6 +132,7 @@ export default function Board({
               onUpdateTask={onUpdateTask}
               onDeleteTask={onDeleteTask}
               onEditTask={handleEditTask}
+              onOpenTask={setOpenTask}
             />
             ))}
           </div>
@@ -141,6 +145,7 @@ export default function Board({
               onUpdate={onUpdateTask}
               onDelete={onDeleteTask}
               onEdit={handleEditTask}
+              onOpen={setOpenTask}
             />
           ) : null}
         </DragOverlay>
@@ -162,6 +167,21 @@ export default function Board({
       }
       setModalOpen(false)
       setEditingTask(null)
+    }}
+  />
+)}
+
+{openTask && (
+  <TaskDetailPanel
+    task={openTask}
+    onClose={() => setOpenTask(null)}
+    onEdit={task => {
+      setOpenTask(null)
+      handleEditTask(task)
+    }}
+    onDelete={async id => {
+      await onDeleteTask(id)
+      setOpenTask(null)
     }}
   />
 )}

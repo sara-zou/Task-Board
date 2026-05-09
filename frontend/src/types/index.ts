@@ -26,3 +26,15 @@ export interface UpdateTaskPayload {
   priority?: Priority
   due_date?: string
 }
+
+export interface Comment {
+    id: string
+    task_id: string
+    user_id: string
+    body: string
+    created_at: string
+  }
+  
+  export interface CreateCommentPayload {
+    body: string
+  }
