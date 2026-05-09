@@ -39,6 +39,7 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "moduleResolution": "node",
+    "ignoreDeprecations": "5.0",
     "esModuleInterop": true
   }
 }
