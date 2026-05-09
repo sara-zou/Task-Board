@@ -70,7 +70,7 @@ export default function Board({
     if (task) setActiveTask(task)
   }
 
-  function handleDragOver(event: DragOverEvent) {
+  function handleDragOver(_event: DragOverEvent) {
   }
 
   async function handleDragEnd(event: DragEndEvent) {

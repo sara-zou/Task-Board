@@ -9,7 +9,6 @@ interface TaskModalProps {
 }
 
 export default function TaskModal({
-  defaultStatus,
   existingTask,
   onClose,
   onSubmit

@@ -7,14 +7,14 @@ export function useAuth() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setLoading(false)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
+    supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
+        setSession(data.session)
+        setLoading(false)
+      })
+      
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
+        setSession(session)
+      })
 
     return () => subscription.unsubscribe()
   }, [])
@@ -25,8 +25,7 @@ export function useAuth() {
   }
 
   async function signUp(email: string, password: string) {
-    // If already anonymous, upgrade the session instead of creating new account
-    // This preserves the user_id so all tasks carry over automatically
+    // Transfer created task to new signed up user
     if (session?.user?.is_anonymous) {
       const { error } = await supabase.auth.updateUser({ email, password })
       if (error) throw error
