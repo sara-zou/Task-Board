@@ -71,7 +71,6 @@ export default function Board({
   }
 
   function handleDragOver(event: DragOverEvent) {
-    // TODO: add visual feedback when hovering over a column
   }
 
   async function handleDragEnd(event: DragEndEvent) {
