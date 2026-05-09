@@ -1,23 +1,27 @@
 import { useState } from 'react'
-import type { Status, Priority, CreateTaskPayload } from '../../types'
+import type { Status, Priority, CreateTaskPayload, Task } from '../../types'
 
 interface TaskModalProps {
   defaultStatus: Status
+  existingTask?: Task
   onClose: () => void
   onSubmit: (payload: CreateTaskPayload) => Promise<void>
 }
 
 export default function TaskModal({
   defaultStatus,
+  existingTask,
   onClose,
   onSubmit
 }: TaskModalProps) {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [priority, setPriority] = useState<Priority>('normal')
-  const [dueDate, setDueDate] = useState('')
+  const [title, setTitle] = useState(existingTask?.title ?? '')
+  const [description, setDescription] = useState(existingTask?.description ?? '')
+  const [priority, setPriority] = useState<Priority>(existingTask?.priority ?? 'normal')
+  const [dueDate, setDueDate] = useState(existingTask?.due_date ?? '')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const isEditing = !!existingTask
 
   async function handleSubmit() {
     if (!title.trim()) {
@@ -36,7 +40,7 @@ export default function TaskModal({
         due_date: dueDate || undefined
       })
     } catch {
-      setError('Failed to create task. Please try again.')
+      setError(`Failed to ${isEditing ? 'update' : 'create'} task. Please try again.`)
       setSubmitting(false)
     }
   }
@@ -45,7 +49,7 @@ export default function TaskModal({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>New Task</h2>
+          <h2>{isEditing ? 'Edit Task' : 'New Task'}</h2>
           <button className="modal-close" onClick={onClose}>×</button>
         </div>
 
@@ -106,7 +110,10 @@ export default function TaskModal({
             onClick={handleSubmit}
             disabled={submitting}
           >
-            {submitting ? 'Creating...' : 'Create Task'}
+            {submitting
+              ? isEditing ? 'Saving...' : 'Creating...'
+              : isEditing ? 'Save Changes' : 'Create Task'
+            }
           </button>
         </div>
       </div>

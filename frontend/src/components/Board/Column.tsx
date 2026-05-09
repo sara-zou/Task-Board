@@ -9,6 +9,7 @@ interface ColumnProps {
   onAddTask: () => void
   onUpdateTask: (id: string, payload: UpdateTaskPayload) => Promise<void>
   onDeleteTask: (id: string) => Promise<void>
+  onEditTask: (task: Task) => void
 }
 
 export default function Column({
@@ -17,7 +18,8 @@ export default function Column({
   tasks,
   onAddTask,
   onUpdateTask,
-  onDeleteTask
+  onDeleteTask,
+  onEditTask
 }: ColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id })
 
@@ -43,6 +45,7 @@ export default function Column({
               task={task}
               onUpdate={onUpdateTask}
               onDelete={onDeleteTask}
+              onEdit={onEditTask}
             />
           ))
         )}

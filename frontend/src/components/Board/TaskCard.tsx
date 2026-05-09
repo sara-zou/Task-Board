@@ -1,13 +1,16 @@
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import type { Task, UpdateTaskPayload } from '../../types'
+import { LuPencil } from 'react-icons/lu'
+
 type Status = 'todo' | 'in_progress' | 'in_review' | 'done'
 
 interface TaskCardProps {
-  task: Task
-  onUpdate: (id: string, payload: UpdateTaskPayload) => Promise<void>
-  onDelete: (id: string) => Promise<void>
-}
+    task: Task
+    onUpdate: (id: string, payload: UpdateTaskPayload) => Promise<void>
+    onDelete: (id: string) => Promise<void>
+    onEdit: (task: Task) => void
+  }
 
 const STATUS_OPTIONS: { value: Status; label: string }[] = [
   { value: 'todo', label: 'To Do' },
@@ -38,7 +41,7 @@ function isDueSoon(dueDate?: string) {
   return due >= now && due <= twoDaysFromNow
 }
 
-export default function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
+export default function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({ id: task.id })
 
@@ -49,28 +52,34 @@ export default function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
-      className={`task-card ${getPriorityClass(task.priority)}`}
-      {...attributes}
-    >
-      {/* Drag handle — only this area triggers dragging */}
-      <div className="task-drag-handle" {...listeners}>
-        ⠿
-      </div>
+  ref={setNodeRef}
+  style={style}
+  className={`task-card ${getPriorityClass(task.priority)}`}
+  {...attributes}
+  {...listeners}
+>
 
       <div className="task-card-header">
-        <span className={`priority-badge priority-badge--${task.priority}`}>
-          {task.priority}
-        </span>
-        <button
-          className="task-delete-btn"
-          onClick={() => onDelete(task.id)}
-          aria-label="Delete task"
-        >
-          ×
-        </button>
-      </div>
+  <span className={`priority-badge priority-badge--${task.priority}`}>
+    {task.priority}
+  </span>
+  <div className="task-card-actions">
+  <button
+  className="task-edit-btn"
+  onClick={() => onEdit(task)}
+  aria-label="Edit task"
+>
+  <LuPencil size={14} />
+</button>
+    <button
+      className="task-delete-btn"
+      onClick={() => onDelete(task.id)}
+      aria-label="Delete task"
+    >
+      ×
+    </button>
+  </div>
+</div>
 
       <p className="task-title">{task.title}</p>
 

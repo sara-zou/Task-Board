@@ -131,6 +131,8 @@ body {
   50% { opacity: 0.4; }
 }
 
+  /* Column */
+
 .column {
   width: 300px;
   flex-shrink: 0;
@@ -226,6 +228,8 @@ body {
   color: var(--text);
   background: var(--surface-2);
 }
+
+  /* Task cards */
 
 .task-card {
   background: var(--surface-2);
@@ -349,6 +353,30 @@ body {
 .task-status-select:hover {
   border-color: var(--accent);
 }
+
+.task-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.task-edit-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+  transition: color var(--transition), background var(--transition);
+}
+
+.task-edit-btn:hover {
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+  /* Modal */
 
 .modal-overlay {
   position: fixed;

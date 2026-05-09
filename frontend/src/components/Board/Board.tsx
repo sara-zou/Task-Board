@@ -39,12 +39,18 @@ export default function Board({
   const [modalOpen, setModalOpen] = useState(false)
   const [defaultStatus, setDefaultStatus] = useState<Status>('todo')
   const [activeTask, setActiveTask] = useState<Task | null>(null)
+  const [editingTask, setEditingTask] = useState<Task | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 8 }
     })
   )
+
+  function handleEditTask(task: Task) {
+    setEditingTask(task)
+    setModalOpen(true)
+  }
 
   function handleAddTask(status: Status) {
     setDefaultStatus(status)
@@ -110,14 +116,15 @@ export default function Board({
           <div className="board">
             {COLUMNS.map(col => (
               <Column
-                key={col.id}
-                id={col.id}
-                label={col.label}
-                tasks={getTasksByStatus(col.id)}
-                onAddTask={() => handleAddTask(col.id)}
-                onUpdateTask={onUpdateTask}
-                onDeleteTask={onDeleteTask}
-              />
+              key={col.id}
+              id={col.id}
+              label={col.label}
+              tasks={getTasksByStatus(col.id)}
+              onAddTask={() => handleAddTask(col.id)}
+              onUpdateTask={onUpdateTask}
+              onDeleteTask={onDeleteTask}
+              onEditTask={handleEditTask}
+            />
             ))}
           </div>
         )}
@@ -128,21 +135,31 @@ export default function Board({
               task={activeTask}
               onUpdate={onUpdateTask}
               onDelete={onDeleteTask}
+              onEdit={handleEditTask}
             />
           ) : null}
         </DragOverlay>
       </div>
 
       {modalOpen && (
-        <TaskModal
-          defaultStatus={defaultStatus}
-          onClose={() => setModalOpen(false)}
-          onSubmit={async payload => {
-            await onCreateTask(payload)
-            setModalOpen(false)
-          }}
-        />
-      )}
+  <TaskModal
+    defaultStatus={defaultStatus}
+    existingTask={editingTask ?? undefined}
+    onClose={() => {
+      setModalOpen(false)
+      setEditingTask(null)
+    }}
+    onSubmit={async payload => {
+      if (editingTask) {
+        await onUpdateTask(editingTask.id, payload)
+      } else {
+        await onCreateTask(payload)
+      }
+      setModalOpen(false)
+      setEditingTask(null)
+    }}
+  />
+)}
     </DndContext>
   )
 }
