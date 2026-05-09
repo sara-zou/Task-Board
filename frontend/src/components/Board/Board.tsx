@@ -27,6 +27,7 @@ interface BoardProps {
   onCreateTask: (payload: CreateTaskPayload) => Promise<void>
   onUpdateTask: (id: string, payload: UpdateTaskPayload) => Promise<void>
   onDeleteTask: (id: string) => Promise<void>
+  onSignOut: () => Promise<void>
 }
 
 export default function Board({
@@ -34,7 +35,8 @@ export default function Board({
   loading,
   onCreateTask,
   onUpdateTask,
-  onDeleteTask
+  onDeleteTask,
+  onSignOut
 }: BoardProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const [defaultStatus, setDefaultStatus] = useState<Status>('todo')
@@ -96,9 +98,12 @@ export default function Board({
       onDragEnd={handleDragEnd}
     >
       <div className="board-container">
-        <header className="board-header">
-          <h1>My Board</h1>
-        </header>
+      <header className="board-header">
+  <h1>My Board</h1>
+  <button className="btn btn--secondary" onClick={onSignOut}>
+    Sign Out
+  </button>
+</header>
 
         {loading ? (
           <div className="board-loading">
