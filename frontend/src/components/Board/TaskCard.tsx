@@ -29,12 +29,12 @@ function getPriorityClass(priority: string) {
 
 function isOverdue(dueDate?: string) {
   if (!dueDate) return false
-  return new Date(dueDate) < new Date()
+  return new Date(dueDate + 'T00:00:00') < new Date()
 }
 
 function isDueSoon(dueDate?: string) {
   if (!dueDate) return false
-  const due = new Date(dueDate)
+  const due = new Date(dueDate + 'T00:00:00')
   const now = new Date()
   const twoDaysFromNow = new Date()
   twoDaysFromNow.setDate(now.getDate() + 2)
@@ -96,7 +96,7 @@ export default function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardP
             : ''
         }`}>
           {isOverdue(task.due_date) ? '! Overdue' : ''}{' '}
-          {new Date(task.due_date).toLocaleDateString()}
+          {new Date(task.due_date + 'T00:00:00').toLocaleDateString()}
         </span>
       )}
 
